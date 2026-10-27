@@ -1,0 +1,23 @@
+name: Compilar EXE Windows
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar dependencias
+        run: python -m pip install --upgrade pip pyinstaller pymupdf pillow
+      - name: Crear EXE sin consola
+        run: python -m PyInstaller --noconfirm --clean --onefile --windowed --name GRAFIPLOT_NUMERADOR_A4 Grafiplot_Numerador_Pro.py
+      - name: Publicar ejecutable
+        uses: actions/upload-artifact@v4
+        with:
+          name: GRAFIPLOT_NUMERADOR_A4_WINDOWS
+          path: dist/GRAFIPLOT_NUMERADOR_A4.exe
+          retention-days: 30
